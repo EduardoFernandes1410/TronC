@@ -10,13 +10,12 @@ int main() {
 	int i, j;
   int **mapa = criarMapa(MAPAL, MAPAC);
 
-	system("clear");
 	imprimeMapa(mapa, MAPAL, MAPAC);
 
 	snprintf(buf, sizeof(buf), "printf \'\e[8;'%d';'%d't\'", MAPAL + 1, MAPAC);
 	system(buf);
 
-	system("sleep 500000");
+  percorreMapa(mapa, MAPAL, MAPAC);
 
   for(i = 0; i < MAPAL; i++) {
     free(mapa[i]);
