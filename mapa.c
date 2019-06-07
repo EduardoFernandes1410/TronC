@@ -1,5 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <ctype.h>
+#include <curses.h>
+#include <stdio_ext.h>
 #include "mapa.h"
 
 #define RESET "\x1B[0m"
@@ -18,6 +21,7 @@ int** criarMapa(int lin, int col) {
   mapa = (int **)malloc(lin * sizeof(int *));
   if(mapa == NULL || mapa == 0) {
     printf("Problema ao alocar memoria :/");
+    endwin();
     exit(-1);
   }
 
@@ -25,6 +29,7 @@ int** criarMapa(int lin, int col) {
     mapa[i] = (int *)calloc(col, sizeof(int));
     if(mapa[i] == NULL || mapa[i] == 0) {
       printf("Problema ao alocar memoria :/");
+      endwin();
       exit(-1);
     }
   }
@@ -41,7 +46,7 @@ int** criarMapa(int lin, int col) {
 void imprimeMapa(int **mapa, int lin, int col) {
 	int i, j;
 
-	// system("clear");
+  reset_shell_mode();
 	for(i = 0; i < lin; i++) {
 		for(j = 0; j < col; j++) {
 			if(mapa[i][j] == 1) {
@@ -59,35 +64,63 @@ void imprimeMapa(int **mapa, int lin, int col) {
 		}
 		printf("\n");
 	}
+
+  __fpurge(stdin);
+  reset_prog_mode();
 }
 
 void percorreMapa(int **mapa, int lin, int col) {
-  int i = 0, j;
-  char comando = 67, linha = (lin / 2), coluna = 2;
+  int i = 0, j, linha1 = (lin / 2), coluna1 = 2, linha2 = (lin / 2), coluna2 = (col - 3);
+  char comando, comando1 = 'd', comando2 = 'j';
 
-  // set_conio_terminal_mode();
-  // for(i = 0; i < 10; i++) {
-    // while(!kbhit()) {
-    while(1) {
+  // Modo automatico
+  while(1) {
+    for(i = 0; i < 2; i++) {
       comando = getch();
 
-      switch(comando) {
-        case 65: //setinha cima
-          mapa[--linha][coluna] = 2;
-          break;
-        case 66: //setinha baixo
-          mapa[++linha][coluna] = 2;
-          break;
-        case 67: //setinha direita
-          mapa[linha][++coluna] = 2;
-          break;
-        case 68: //setinha esquerda
-          mapa[linha][--coluna] = 2;
-          break;
+      if(tolower(comando) == 'w' || tolower(comando) == 'a' || tolower(comando) == 's' || tolower(comando) == 'd') {
+        comando1 = comando;
+      } else if(tolower(comando) == 'i' || tolower(comando) == 'j' || tolower(comando) == 'k' || tolower(comando) == 'l') {
+        comando2 = comando;
+      } else if(tolower(comando) == 3) {
+        endwin();
+        exit(-1);
       }
-
-      // system("sleep 0.1s");
-      imprimeMapa(mapa, lin, col);
     }
-  // }
+
+    // Player 1
+    switch(tolower(comando1)) {
+      case 'w': //setinha cima
+        mapa[--linha1][coluna1] = 2;
+        break;
+      case 's': //setinha baixo
+        mapa[++linha1][coluna1] = 2;
+        break;
+      case 'd': //setinha direita
+        mapa[linha1][++coluna1] = 2;
+        break;
+      case 'a': //setinha esquerda
+        mapa[linha1][--coluna1] = 2;
+        break;
+    }
+
+    // Player 2
+    switch(tolower(comando2)) {
+      case 'i': //setinha cima
+        mapa[--linha2][coluna2] = 3;
+        break;
+      case 'k': //setinha baixo
+        mapa[++linha2][coluna2] = 3;
+        break;
+      case 'l': //setinha direita
+        mapa[linha2][++coluna2] = 3;
+        break;
+      case 'j': //setinha esquerda
+        mapa[linha2][--coluna2] = 3;
+        break;
+    }
+
+    system("sleep 0.1s");
+    imprimeMapa(mapa, lin, col);
+  }
 }

@@ -156,7 +156,7 @@ void clear_background(void){
 }
 
 /// Update loop
-void mainloop(void
+void mainloop(void) {
     clear_background();          // clear background
     draw_snake_in_background(1); // Install Snake
     print_array_frame();         // Print Frame
@@ -239,7 +239,7 @@ void loop(void){
     y=0;
 
     while(x<500){
-        sleepcp(lap);
+      sleepcp(lap);
 
         if(_kbhit()) {
           cin >> k; /// Character
