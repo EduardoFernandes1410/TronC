@@ -1,9 +1,8 @@
 # TronC
-Tron game in C
+Jogo Tron em C
 
 #Pre-requisitos
 $sudo apt-get install libncurses5-dev
 
 #Rodar
-$gcc tron.c mapa.c mapa.h comandos.c -lcurses
-$./a.out
+$make -s

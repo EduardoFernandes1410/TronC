@@ -3,6 +3,7 @@
 #include <ctype.h>
 #include <curses.h>
 #include <stdio_ext.h>
+#include <string.h>
 #include "mapa.h"
 
 #define RESET "\x1B[0m"
@@ -13,6 +14,15 @@
 #define MAG   "\x1B[35m"
 #define CYN   "\x1B[36m"
 #define WHT   "\x1B[37m"
+
+void liberaMapa(int **mapa, int lin) {
+  int i;
+
+  for(i = 0; i < lin; i++) {
+    free(mapa[i]);
+  }
+  free(mapa);
+}
 
 int** criarMapa(int lin, int col) {
   int **mapa, i;
@@ -43,7 +53,7 @@ int** criarMapa(int lin, int col) {
   return mapa;
 }
 
-void imprimeMapa(int **mapa, int lin, int col) {
+void imprimeMapa(int **mapa, int lin, int col, char cores[][10]) {
 	int i, j;
 
   reset_shell_mode();
@@ -56,71 +66,113 @@ void imprimeMapa(int **mapa, int lin, int col) {
 				printf(WHT "\342\226\210" RESET);
 			}
 			else if(mapa[i][j] == 2) {
-				printf(GRN "\342\226\210" RESET);
+        printf("%s", cores[0]);
+				printf("\342\226\210" RESET);
 			}
 			else if(mapa[i][j] == 3) {
-				printf(BLU "\342\226\210" RESET);
+        printf("%s", cores[1]);
+				printf("\342\226\210" RESET);
 			}
 		}
 		printf("\n");
-	}
+  }
 
   __fpurge(stdin);
   reset_prog_mode();
 }
 
-void percorreMapa(int **mapa, int lin, int col) {
-  int i = 0, j, linha1 = (lin / 2), coluna1 = 2, linha2 = (lin / 2), coluna2 = (col - 3);
+int iniciaJogo(int **mapa, int lin, int col, char cores[][10]) {
+  int i = 0, j, linha1 = (lin / 2), coluna1 = 10, linha2 = (lin / 2), coluna2 = (col - 11), res = 0;
+  int last1[2] = {linha1, coluna1}, last2[2] = {linha2, coluna2};
   char comando, comando1 = 'd', comando2 = 'j';
+
+  // Limpa buffer
+  __fpurge(stdin);
+  for(i = 0; i < 1000; i++) getch();
 
   // Modo automatico
   while(1) {
     for(i = 0; i < 2; i++) {
-      comando = getch();
+      comando = tolower(getch());
 
-      if(tolower(comando) == 'w' || tolower(comando) == 'a' || tolower(comando) == 's' || tolower(comando) == 'd') {
-        comando1 = comando;
-      } else if(tolower(comando) == 'i' || tolower(comando) == 'j' || tolower(comando) == 'k' || tolower(comando) == 'l') {
-        comando2 = comando;
-      } else if(tolower(comando) == 3) {
+      if(comando == 'w' || comando == 'a' || comando == 's' || comando == 'd') {
+        if(abs(comando1 - comando) != 3 && abs(comando1 - comando) != 4) {
+          comando1 = comando;
+        }
+      } else if(comando == 'i' || comando == 'j' || comando == 'k' || comando == 'l') {
+        if(abs(comando2 - comando) != 2) {
+          comando2 = comando;
+        }
+      } else if(comando == 3) {
         endwin();
-        exit(-1);
+        return 0;
       }
     }
 
     // Player 1
-    switch(tolower(comando1)) {
+    last1[0] = linha1;
+    last1[1] = coluna1;
+    switch(comando1) {
       case 'w': //setinha cima
-        mapa[--linha1][coluna1] = 2;
+        linha1--;
         break;
       case 's': //setinha baixo
-        mapa[++linha1][coluna1] = 2;
+        linha1++;
         break;
       case 'd': //setinha direita
-        mapa[linha1][++coluna1] = 2;
+        coluna1++;
         break;
       case 'a': //setinha esquerda
-        mapa[linha1][--coluna1] = 2;
+        coluna1--;
         break;
     }
 
     // Player 2
-    switch(tolower(comando2)) {
+    last2[0] = linha2;
+    last2[1] = coluna2;
+    switch(comando2) {
       case 'i': //setinha cima
-        mapa[--linha2][coluna2] = 3;
+        linha2--;
         break;
       case 'k': //setinha baixo
-        mapa[++linha2][coluna2] = 3;
+        linha2++;
         break;
       case 'l': //setinha direita
-        mapa[linha2][++coluna2] = 3;
+        coluna2++;
         break;
       case 'j': //setinha esquerda
-        mapa[linha2][--coluna2] = 3;
+        coluna2--;
         break;
     }
 
-    system("sleep 0.1s");
-    imprimeMapa(mapa, lin, col);
+    // Se J1 colidiu
+    if(mapa[linha1][coluna1] != 0) {
+      res += 2;
+      mapa[last1[0]][last1[1]] = 1;
+    } else {
+      mapa[linha1][coluna1] = 2;
+    }
+
+    // Se J2 colidiu
+    if(mapa[linha2][coluna2] != 0) {
+      res += 1;
+      mapa[last2[0]][last2[1]] = 1;
+    } else {
+      mapa[linha2][coluna2] = 3;
+    }
+
+    // Verifica se empatou
+    if(res == 3) {
+      imprimeMapa(mapa, lin, col, cores);
+      printf("Empate!\t");
+      return 0;
+    } else if(res != 0) {
+      imprimeMapa(mapa, lin, col, cores);
+      printf("J%d venceu a queda!\t", res);
+      return res;
+    }
+
+    system("sleep 0.02s");
+    imprimeMapa(mapa, lin, col, cores);
   }
 }
