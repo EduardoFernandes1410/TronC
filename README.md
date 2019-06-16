@@ -5,5 +5,4 @@ Tron game in C
 $sudo apt-get install libncurses5-dev
 
 ### Rodar
-$gcc tron.c mapa.c mapa.h comandos.c -lcurses\
-$./a.out
+$make -s
