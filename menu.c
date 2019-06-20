@@ -49,6 +49,8 @@ void imprimir(int selecao){
 
 void printInformacoes(){
 
+    reset_shell_mode();
+
 	system("clear");
 
 	printf("\nControles:\n\n"
@@ -66,7 +68,9 @@ void printInformacoes(){
 	"\t\tArthur de Brito Bonifacio | Eduardo Augusto Militao Fernandes");
 
 	printf("\n\n\nAperte <enter> para continuar...");
+	system("sleep 5s");
 	getchar();
+
 }
 
 
@@ -249,7 +253,7 @@ int Menu(int dimensoes[2], char cores[2][10]){
 		else if(setinha == 10){ //quando da enter
 			setinha == 1;
 			if(selecao == 1)
-				return 0;
+				return 1;
 			else if(selecao == 2){
 				system("clear");
 				setResolucao(dimensoes);
@@ -258,10 +262,12 @@ int Menu(int dimensoes[2], char cores[2][10]){
 				system("clear");
         		setCores(cores);
 			}
-			else if(selecao == 4) printInformacoes();
+			else if(selecao == 4){
+				printInformacoes();
+			} 
 			else if(selecao == 5){
 				agradecerJogadores();
-				exit(0);
+				return 0;
 			}
 		}
 	}

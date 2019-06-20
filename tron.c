@@ -9,7 +9,7 @@
 
 int main() {
 
-	int i, menu, res = 0, j1 = 0, j2 = 0;
+	int i, menu, jogou = 0, res = 0, j1 = 0, j2 = 0;
   int dimensoes[2];
   int **mapa;
   char cores[2][10];
@@ -20,11 +20,14 @@ int main() {
   applyResolucao(dimensoes);
   getCores(cores);
 
+  
   while(1) {
+
 
     system("clear");
     
-    Menu(dimensoes, cores); //Exibe o menu
+    jogou = 0;
+    menu = Menu(dimensoes, cores); //Exibe o menu
 
     //Recupera as novas informacoes inseridas pelo usuario
     getResolucao(dimensoes);
@@ -38,7 +41,9 @@ int main() {
     noecho();
     nodelay(stdscr, TRUE);
 
-    while(j1 != 3 && j2 != 3) {
+    while(j1 != 3 && j2 != 3 && menu != 0) {
+
+      jogou = 1;
       // Comeca jogo
       mapa = criarMapa(dimensoes[0], dimensoes[1]);
       imprimeMapa(mapa, dimensoes[0], dimensoes[1], cores);
@@ -66,10 +71,14 @@ int main() {
       }
     }
     endwin();
-    liberaMapa(mapa, dimensoes[0]);
-
+    if(jogou == 1){
+      liberaMapa(mapa, dimensoes[0]);
+    }
     system("clear");
-      
+    
+    if(menu == 0){
+      exit(0);
+    }
   }
 
 }
