@@ -82,7 +82,7 @@ void imprimeMapa(int **mapa, int lin, int col, char cores[][10]) {
 }
 
 int iniciaJogo(int **mapa, int lin, int col, char cores[][10]) {
-  int i = 0, j, linha1 = (lin / 2), coluna1 = 10, linha2 = (lin / 2), coluna2 = (col - 11), res = 0;
+  int i = 0, j, linha1 = (lin / 2), coluna1 = 10, linha2 = (lin / 2), coluna2 = (col - 11), res = 0, c1 = 0, c2 = 0;
   int last1[2] = {linha1, coluna1}, last2[2] = {linha2, coluna2};
   char comando, comando1 = 'd', comando2 = 'j';
 
@@ -92,16 +92,20 @@ int iniciaJogo(int **mapa, int lin, int col, char cores[][10]) {
 
   // Modo automatico
   while(1) {
+    c1 = c2 = 0;
+
     for(i = 0; i < 2; i++) {
       comando = tolower(getch());
 
       if(comando == 'w' || comando == 'a' || comando == 's' || comando == 'd') {
-        if(abs(comando1 - comando) != 3 && abs(comando1 - comando) != 4) {
+        if(abs(comando1 - comando) != 3 && abs(comando1 - comando) != 4 && c1 == 0) {
           comando1 = comando;
+          c1 = 1;
         }
       } else if(comando == 'i' || comando == 'j' || comando == 'k' || comando == 'l') {
-        if(abs(comando2 - comando) != 2) {
+        if(abs(comando2 - comando) != 2 && c2 == 0) {
           comando2 = comando;
+          c2 = 1;
         }
       } else if(comando == 3) {
         endwin();
@@ -164,15 +168,18 @@ int iniciaJogo(int **mapa, int lin, int col, char cores[][10]) {
     // Verifica se empatou
     if(res == 3) {
       imprimeMapa(mapa, lin, col, cores);
-      printf("Empate!\t");
+      //printf("Empate!\t");
+      system("sleep 1s");
       return 0;
     } else if(res != 0) {
       imprimeMapa(mapa, lin, col, cores);
-      printf("J%d venceu a queda!\t", res);
+      //printf("J%d venceu a queda!\t", res);
+      system("sleep 1s");
       return res;
     }
 
-    system("sleep 0.02s");
+    system("sleep 0.1s");
     imprimeMapa(mapa, lin, col, cores);
   }
 }
+

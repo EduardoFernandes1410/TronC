@@ -5,12 +5,15 @@
 #include <string.h>
 #include "mapa.h"
 #include "config.h"
+#include "menu.h"
 
 int main() {
+
 	int i, menu, res = 0, j1 = 0, j2 = 0;
   int dimensoes[2];
   int **mapa;
-  char cores[2][10], cor[8];
+  char cores[2][10];
+
 
   // Pega configs do arquivo de config
   getResolucao(dimensoes);
@@ -18,61 +21,55 @@ int main() {
   getCores(cores);
 
   while(1) {
-    // Exibe menu
+
     system("clear");
-    printf("(0) Jogar\n(1) Mudar resolucao\n(2) Mudar cores\n(3) Sair\n");
+    
+    Menu(dimensoes, cores); //Exibe o menu
 
-    menu = -1;
-    __fpurge(stdin);
-    scanf("%d", &menu);
+    //Recupera as novas informacoes inseridas pelo usuario
+    getResolucao(dimensoes);
+    applyResolucao(dimensoes);
+    getCores(cores);
 
-    j1 = j2 = 0;
-    switch(menu) {
-      case 0:
-        // Curses.h
-        initscr();
-        noecho();
-        nodelay(stdscr, TRUE);
+    j1 = j2 = 0; //Pontuacao = 0
 
-        while(j1 != 3 && j2 != 3) {
-          // Comeca jogo
-          mapa = criarMapa(dimensoes[0], dimensoes[1]);
-          imprimeMapa(mapa, dimensoes[0], dimensoes[1], cores);
-          res = iniciaJogo(mapa, dimensoes[0], dimensoes[1], cores);
+    // Curses.h
+    initscr();
+    noecho();
+    nodelay(stdscr, TRUE);
 
-          if(res == 1) j1++;
-          else if(res == 2) j2++;
-          printf("J1: %d J2: %d\t", j1, j2);
+    while(j1 != 3 && j2 != 3) {
+      // Comeca jogo
+      mapa = criarMapa(dimensoes[0], dimensoes[1]);
+      imprimeMapa(mapa, dimensoes[0], dimensoes[1], cores);
+      res = iniciaJogo(mapa, dimensoes[0], dimensoes[1], cores);
 
-          if(j1 == 3) {
-            printf("J1 venceu o jogo!\n");
-            system("sleep 2s");
-          } else if(j2 == 3) {
-            printf("J2 venceu o jogo!\n");
-            system("sleep 2s");
-          } else {
-            printf("\n");
-            system("sleep 2s");
-          }
-        }
+      if(res == 1){
+        j1++;
+        if(j1 != 3) pontoJogador(1, j1, j2);
+      }
+      else if(res == 2){
+        j2++;
+        if(j2 != 3) pontoJogador(2, j1, j2);
+      }
+      else if(res == 0){
+        pontoJogador(0, j1, j2);
+      }
 
-        endwin();
-        liberaMapa(mapa, dimensoes[0]);
-        break;
-      case 1:
-        // Redimensiona terminal
-        setResolucao(dimensoes);
-        applyResolucao(dimensoes);
-        break;
-      case 2:
-        // Altera cores das motos
-        setCores(cores);
-        break;
-      case 3:
-        endwin();
-        return 0;
-        break;
+      if(j1 == 3) {
+        parabensGanhador(1, j1, j2);
+      } else if(j2 == 3) {
+        parabensGanhador(2, j1, j2);
+      } else {
+        printf("\n");
+        system("sleep 2s");
+      }
     }
+    endwin();
+    liberaMapa(mapa, dimensoes[0]);
+
+    system("clear");
+      
   }
 
 }

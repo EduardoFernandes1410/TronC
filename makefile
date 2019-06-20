@@ -6,8 +6,8 @@ all:
 	make run
 	make clean
 
-compilar: tron.c mapa.c mapa.h config.c config.h comandos.c -lcurses
-	gcc -o $(TARGET) tron.c mapa.c mapa.h config.c config.h comandos.c -lcurses
+compilar: tron.c menu.c menu.h mapa.c mapa.h config.c config.h comandos.c -lcurses
+	gcc -o $(TARGET) tron.c menu.c menu.h mapa.c mapa.h config.c config.h comandos.c -lcurses
 
 run:
 	./$(TARGET)
