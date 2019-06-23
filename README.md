@@ -1,7 +1,7 @@
 # TronC
 Tron game in C
 
-### Pre-requisitos
+### Pré-requisitos
 - Esteja em um ambiente Linux
 - Rode o seguinte comando no terminal:
 ```
