@@ -3,13 +3,13 @@ Tron game in C
 
 ### Pre-requisitos
 - Esteja em um ambiente Linux
-- Rode o comando no terminal:
+- Rode o seguinte comando no terminal:
 ```
 sudo apt-get install libncurses5-dev
 ```
 
 ### Rodar
-- Rode o comando no terminal, na pasta do jogo:
+- Rode o seguinte comando no terminal, dentro do diretório do jogo:
 ```
 make -s
 ```
