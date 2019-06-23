@@ -56,6 +56,7 @@ int** criarMapa(int lin, int col) {
 void imprimeMapa(int **mapa, int lin, int col, char cores[][10]) {
 	int i, j;
 
+  system("clear");
   reset_shell_mode();
 	for(i = 0; i < lin; i++) {
 		for(j = 0; j < col; j++) {
@@ -182,4 +183,3 @@ int iniciaJogo(int **mapa, int lin, int col, char cores[][10]) {
     imprimeMapa(mapa, lin, col, cores);
   }
 }
-

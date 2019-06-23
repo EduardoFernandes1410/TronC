@@ -44,13 +44,10 @@ void imprimir(int selecao){
 	else if(selecao==3) printf("\t\t\n\n\n\t\t\t\t\t\t\t  JOGAR\n\t\t\t\t\t\t\t  MUDAR RESOLUCAO\n\t\t\t\t\t\t\t> MUDAR CORES\n\t\t\t\t\t\t\t  INFORMACOES\n\t\t\t\t\t\t\t  SAIR\n");
 	else if(selecao==4) printf("\t\t\n\n\n\t\t\t\t\t\t\t  JOGAR\n\t\t\t\t\t\t\t  MUDAR RESOLUCAO\n\t\t\t\t\t\t\t  MUDAR CORES\n\t\t\t\t\t\t\t> INFORMACOES\n\t\t\t\t\t\t\t  SAIR\n");
 	else if(selecao==5) printf("\t\t\n\n\n\t\t\t\t\t\t\t  JOGAR\n\t\t\t\t\t\t\t  MUDAR RESOLUCAO\n\t\t\t\t\t\t\t  MUDAR CORES\n\t\t\t\t\t\t\t  INFORMACOES\n\t\t\t\t\t\t\t> SAIR\n");
-
 }
 
 void printInformacoes(){
-
-    reset_shell_mode();
-
+  reset_shell_mode();
 	system("clear");
 
 	printf("\nControles:\n\n"
@@ -68,19 +65,16 @@ void printInformacoes(){
 	"\t\tArthur de Brito Bonifacio | Eduardo Augusto Militao Fernandes");
 
 	printf("\n\n\nAperte <enter> para continuar...");
-	system("sleep 5s");
+	system("sleep 3s");
 	getchar();
-
 }
 
 
 void pontoJogador(int jogadorPontuador, int totalJ1, int totalJ2){
-    reset_shell_mode();
-
+  reset_shell_mode();
 	system("clear");
 
 	if(jogadorPontuador == 0){
-
 		printf(
 			"__________                             _____              ______   \n"
 			"___  ____/_______ ___ ________ ______ ___  /______        ___  /   \n"
@@ -90,7 +84,6 @@ void pontoJogador(int jogadorPontuador, int totalJ1, int totalJ2){
 			"                      /_/                                          \n"
 			"\n\nJogador 1 -> %d X %d <- Jogador 2", totalJ1, totalJ2
 		);
-
 	}
 
 	if(jogadorPontuador == 1){
@@ -109,11 +102,9 @@ void pontoJogador(int jogadorPontuador, int totalJ1, int totalJ2){
 			"\t                /____/                                                                            \n"
 			"\n\nJogador 1 -> %d X %d <- Jogador 2", totalJ1, totalJ2
 		);
-
 	}
 
 	if(jogadorPontuador == 2){
-
 		printf("\n"
 			"\t________                _____                                                                     \n"
 			"\t___  __ \\______ _______ __  /_______        ________ ______ _______________ _       ______        \n"
@@ -129,29 +120,21 @@ void pontoJogador(int jogadorPontuador, int totalJ1, int totalJ2){
 			"\t                /____/                                                                            \n"
 			"\n\nJogador 1 -> %d X %d <- Jogador 2", totalJ1, totalJ2
 		);
-
 	}
 
-
-    reset_prog_mode();
-
+  reset_prog_mode();
 }
 
 void parabensGanhador(int jogador, int totalJ1, int totalJ2){
-
-    reset_shell_mode();
+  reset_shell_mode();
+  system("clear");
 
 	FILE *arq;
-
-	system("clear");
-
 	time_t current_time;
-    char* c_time_string;
+  char* c_time_string;
 
 	current_time = time(NULL); //pega o tempo
-
 	c_time_string = ctime(&current_time); //converte para o formato local
-
 	arq = fopen("registro.txt", "a");
 
 	if(jogador == 1){
@@ -190,20 +173,15 @@ void parabensGanhador(int jogador, int totalJ1, int totalJ2){
 		);
 
 		fprintf(arq, "%s Jogador 2 ganhou -> %d X %d\n\n", c_time_string, totalJ1, totalJ2);
-
 	}
 
-	system("sleep 5s");
-
+	system("sleep 3s");
 	fclose(arq);
-	
-    reset_prog_mode();
+  reset_prog_mode();
 }
 
 void agradecerJogadores(){
-
-    reset_shell_mode();
-
+  reset_shell_mode();
 	system("clear");
 
 	printf(
@@ -222,10 +200,8 @@ void agradecerJogadores(){
 	);
 
 	system("sleep 3s");
-
 	system("clear");
-
-    reset_prog_mode();
+  reset_prog_mode();
 }
 
 int Menu(int dimensoes[2], char cores[2][10]){
@@ -252,20 +228,18 @@ int Menu(int dimensoes[2], char cores[2][10]){
 		}
 		else if(setinha == 10){ //quando da enter
 			setinha == 1;
-			if(selecao == 1)
-				return 1;
-			else if(selecao == 2){
+
+      if(selecao == 1) {
+        return 1;
+      } else if(selecao == 2){
 				system("clear");
 				setResolucao(dimensoes);
-			}
-			else if(selecao == 3){
+			} else if(selecao == 3){
 				system("clear");
-        		setCores(cores);
-			}
-			else if(selecao == 4){
+        setCores(cores);
+			} else if(selecao == 4){
 				printInformacoes();
-			} 
-			else if(selecao == 5){
+			} else if(selecao == 5){
 				agradecerJogadores();
 				return 0;
 			}
